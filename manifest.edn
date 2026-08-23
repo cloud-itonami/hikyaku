@@ -1,0 +1,43 @@
+;; hikyaku 飛脚 — actor manifest
+;; 法律がまだ紙に留めている手続きの「使者」層。収入印紙の購入・貼付・封入・追跡郵便での
+;; 発送・受領証の保全を、1 step ごとに証拠を要求する human computing として回す。
+;; 判断（繋ぎが要るか・何が残るか）は kotoba-lang/shomen。
+{:actor/id        "hikyaku"
+ :actor/glyph     "飛"
+ :actor/tier      :tier-b
+ :actor/domain    "hikyaku.itonami.cloud"
+ :actor/did       "did:web:itonami.cloud:actor:hikyaku"
+ :actor/purpose   "Messenger (使者) service for procedures the law still keeps on paper: buy the revenue stamp, affix it without cancelling where the office cancels, enclose the principal's own documents, post by a traceable class, and prove every step with evidence before the next one starts."
+ :actor/status    :r0
+ :actor/adr       "2608232400"
+ :actor/related   ["2608232400"]
+ :actor/depends   [{:repo "kotoba-lang/shomen" :why "interim / remaining-analog / delegable? — what must still happen on paper, and whether a messenger may do it"}]
+ :actor/siblings  [{:repo "cloud-itonami/teigen" :boundary "同じ shomen entry の提言側。hikyaku は繋ぎ側"}
+                   {:repo "cloud-itonami/insatsu" :boundary "印刷・郵送 routing（job データと見積）。物理行為は持たない。hikyaku は物理行為の証拠を持つ"}
+                   {:repo "cloud-itonami/yuubin" :boundary "Web ゆうびん投函の自動化（2026-04 断念）。hikyaku は人が投函する"}
+                   {:repo "cloud-itonami/kadode" :boundary "退職の使者。hikyaku は手続き文書の使者。どちらも代理ではない"}]
+ :actor/gates
+ [{:gate/id "G1" :gate/name "consent"          :gate/rule "本人の DID 署名付き同意（scope :hikyaku/job）"}
+  {:gate/id "G2" :gate/name "messenger-only"   :gate/rule "文書は本人が作成済み。作成・補正・署名・押印・代理申請は受けない（行政書士法 §19 / 司法書士法 §73 / 弁護士法 §72）"}
+  {:gate/id "G3" :gate/name "delegable"        :gate/rule "出頭・押印・公証が残る手続きは繋ぎが成立しない。本人が行く"}
+  {:gate/id "G4" :gate/name "paper-only-when-needed" :gate/rule ":electronic-now は電子の道を案内して断る。:unverified は調べる前に運ばない"}
+  {:gate/id "G5" :gate/name "amount-confirmed" :gate/rule "seed entry の額で印紙を買わない。本人が額を確認する"}
+  {:gate/id "G6" :gate/name "office-cancels"   :gate/rule "本人が消印すべき印紙（課税文書）は飛脚が貼らない。受理官署が消印するものだけ"}
+  {:gate/id "G7" :gate/name "pii-sealed"       :gate/rule "届け先は sealed envelope。平文の住所・氏名は受けない"}
+  {:gate/id "G8" :gate/name "traceable-post"   :gate/rule "特定記録・書留・内容証明だけ。普通郵便にしない"}
+  {:gate/id "G9" :gate/name "evidence-per-step" :gate/rule "証拠の無い step は終わらない。順番は飛ばせない（hikyaku.job）"}
+  {:gate/id "G10" :gate/name "stamp-is-pass-through" :gate/rule "印紙の額面は立替であって売上ではない。手間賃と別行"}]
+ :actor/cells
+ [{:cell/id "fee"       :cell/kind :pure   :cell/ns "hikyaku.fee"      :cell/note "民訴費用法 別表第一の算式・定額表・券種分割（seed）"}
+  {:cell/id "plan"      :cell/kind :pure   :cell/ns "hikyaku.plan"     :cell/note "shomen interim → 手順書（証拠種類・手間賃・郵便種別）"}
+  {:cell/id "governor"  :cell/kind :pure   :cell/ns "hikyaku.governor" :cell/note "G1–G8。:allow / :deny"}
+  {:cell/id "job"       :cell/kind :pure   :cell/ns "hikyaku.job"      :cell/note "証拠つき状態機械。受領証・明細"}
+  {:cell/id "dispatch"  :cell/kind :effect :cell/ns "hikyaku.actor"    :cell/note "[:workforce/assign …] を cloud-itonami の workforce へ。人が作業し、証拠を返す"}]
+ :actor/effects  [:ledger/append :job/quote :workforce/assign :job/receipt :refuse]
+ :actor/non-goals
+ ["NOT 行政書士・司法書士・弁護士（文書を作らない・直さない・代理申請しない）"
+  "NOT 印紙の転売（額面は立替。在庫を持たない）"
+  "NOT 普通郵便（追跡の無い発送をしない）"
+  "NOT 本人の代わりの出頭・押印・公証"
+  "NOT a print shop（印刷は insatsu）"]
+ :actor/runtime  {:first :nbb :tests "nbb --classpath src:test:../../kotoba-lang/shomen/src run_tests.cljs"}}

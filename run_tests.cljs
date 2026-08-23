@@ -1,0 +1,13 @@
+;; nbb テストエントリ。
+;;   nbb --classpath src:test:../../kotoba-lang/shomen/src run_tests.cljs
+(ns run-tests
+  (:require [cljs.test :as t]
+            [hikyaku.actor-test]))
+
+(defmethod t/report [:cljs.test/default :end-run-tests] [m]
+  (println (str "\n" (if (t/successful? m) "PASS" "FAIL")
+                " — " (:test m) " tests, " (:pass m) " assertions, "
+                (:fail m) " failures, " (:error m) " errors"))
+  (when-not (t/successful? m) (js/process.exit 1)))
+
+(t/run-tests 'hikyaku.actor-test)
