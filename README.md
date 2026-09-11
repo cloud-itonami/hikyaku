@@ -10,7 +10,7 @@ R0（決定核と状態機械。workforce への配信 host は未実装）。**
 ためのものではない —— `:electronic-now` の手続きは電子の道を案内して断る（G4）。
 
 ```bash
-nbb --classpath src:test:../../kotoba-lang/shomen/src run_tests.cljk   # 9 tests / 65 assertions
+kbb --backend sci --classpath src:test:../../kotoba-lang/shomen/src run_tests.cljk   # 9 tests / 65 assertions
 ```
 
 ## 使者であって代理ではない（ここが一番大事）
