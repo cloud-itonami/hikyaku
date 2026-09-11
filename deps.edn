@@ -1,7 +1,7 @@
 ;; hikyaku (飛脚) — 法律がまだ紙に留めている手続きの「使者」層: 収入印紙の購入・貼付・封入・
 ;; 追跡郵便での発送・受領証の保全を、1 step ごとに証拠を要求する human-computing として回す。
 ;; 判断は shomen（kotoba-lang）に依存する。テストの第一経路は nbb:
-;;   nbb --classpath src:test:../../kotoba-lang/shomen/src run_tests.cljk
+;;   kbb --backend sci --classpath src:test:../../kotoba-lang/shomen/src run_tests.cljk
 {:paths ["src"]
  :deps {io.github.kotoba-lang/shomen {:local/root "../../kotoba-lang/shomen"}}
  :aliases {:test {:extra-paths ["test"]}}}
