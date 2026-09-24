@@ -1,5 +1,5 @@
 (ns hikyaku.actor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [hikyaku.actor :as a]
             [hikyaku.fee :as fee]
             [hikyaku.governor :as gov]

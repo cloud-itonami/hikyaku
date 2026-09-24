@@ -3,5 +3,9 @@
 ;; 判断は shomen（kotoba-lang）に依存する。テストの第一経路は nbb:
 ;;   kbb --backend sci --classpath src:test:../../kotoba-lang/shomen/src run_tests.cljk
 {:paths ["src"]
- :deps {io.github.kotoba-lang/shomen {:local/root "../../kotoba-lang/shomen"}}
+ :deps {
+        ;; kotoba.test (clojure.test-compatible surface), not clojure.test --
+        ;; scripts/migrate-clojure-test-to-kotoba-test.cljk. Explicit floor.
+        io.github.kotoba-lang/test {:git/url "https://github.com/kotoba-lang/test.git"
+                                    :git/sha "2ab4885f99fd25552d380d0f6b0b54c5a72eb7ae"}io.github.kotoba-lang/shomen {:local/root "../../kotoba-lang/shomen"}}
  :aliases {:test {:extra-paths ["test"]}}}
